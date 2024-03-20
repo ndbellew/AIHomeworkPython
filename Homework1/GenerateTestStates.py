@@ -1,6 +1,29 @@
 from random import shuffle, choice
 
 
+def genQueens():
+    State1 = [[1, 1, 1, 1],
+              [0, 0, 0, 0],
+              [0, 0, 0, 0],
+              [0, 0, 0, 0]]
+    State2 = [[1, 0, 0, 0],
+              [1, 0, 0, 0],
+              [1, 0, 0, 0],
+              [1, 0, 0, 0]]
+    State3 = [[1, 0, 0, 0],
+              [0, 1, 0, 0],
+              [0, 0, 1, 0],
+              [0, 0, 0, 1]]
+    State4 = [[1, 0, 0, 1],
+              [0, 0, 0, 0],
+              [0, 0, 0, 0],
+              [1, 0, 0, 1]]
+    State5 = [[0, 0, 0, 0],
+              [0, 1, 1, 0],
+              [0, 1, 1, 0],
+              [0, 0, 0, 0]]
+    return [State1,State2,State3,State4,State5]
+
 def genRandInit(complexityLevel=0, currentState=list()):
     goal_state = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]  # Goal state
 

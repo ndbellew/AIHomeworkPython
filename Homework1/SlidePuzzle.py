@@ -1,16 +1,16 @@
 # AI Homework 1
-import csv
+
 # Author: Nathan Bellew
 
-# Lib
-
+# Imports
 
 from time import time as run_time
 from collections import deque
 from GenerateTestStates import genRandInit
-from SendToODS import ToODS
 from pprint import pprint
+from SendToODS import ToODS
 
+# Functions
 def findBlank(node):
   for i in range(len(node)):
     for j in range(len(node[i])):
@@ -65,7 +65,6 @@ def bfs(initNode, goalNode):
   while discoveredNodes:
     node, path = discoveredNodes.popleft()
     explor = tuple(map(tuple, node))
-    # print(node)
     if node == goalNode:
       return node, path
     explored.add(explor)
@@ -81,10 +80,8 @@ def bfs(initNode, goalNode):
 def computeSuccessors(node):
   n = 3
   successors = []
-
   blankRow, blankColumn = findBlank(node)
   moves = ['up', 'down', 'left', 'right']
-
   for move in moves:
     newRow, newColumn = blankRow, blankColumn
     match move:
@@ -96,7 +93,6 @@ def computeSuccessors(node):
         newColumn -= 1
       case 'right':
         newColumn += 1
-
     if 0 <= newRow < n and 0 <= newColumn < n:
       newState = [row[:] for row in node]  # Create a deep copy of the current state
       newState[blankRow][blankColumn] = node[newRow][newColumn]
@@ -104,41 +100,21 @@ def computeSuccessors(node):
       successors.append((newState, move))
       # 1 is the cost associated with the move
   if not successors:
-    raise SuccessorsError("Error with Successors")
+    return None
   else:
     return successors
 
 def graphSearch(initNode, goalNode, typeSearch): # for now this is BFS
   # BFS, DFS, Iterative Deepening Search, Bidrectional Search
-  # print(f"from graphSearch {initNode}")
-  print(f"Type Search: {typeSearch}")
   match typeSearch:
     case "bfs":
-      try:
-        ans = bfs(initNode, goalNode)
-        # print(f"ans {ans}")
-        return ans
-      except NoPathFoundError as noPath:
-        print("BFS No Path Found")
+      return bfs(initNode, goalNode)
     case "dfs":
-      try:
-        ans = dfs(initNode, goalNode, complexityLevel+1)
-        return ans
-      except(NoPathFoundError) as noPath:
-        print("DFS No Path Found")
-        return ("DNF", ['start'])
+      return dfs(initNode, goalNode, complexityLevel+1)
     case "ids":
-      try:
-        ans = ids(initNode, goalNode)
-        return ans
-      except(NoPathFoundError) as noPath:
-        print("IDS No Path Found")
+      return ids(initNode, goalNode)
     case "bds":
-      try:
-        ans = bfs(initNode, goalNode)
-        return ans
-      except(NoPathFoundError) as noPath:
-        print("BDS No Path Found")
+      return bfs(initNode, goalNode)
     case _:
       return None
   return None
@@ -146,30 +122,24 @@ def graphSearch(initNode, goalNode, typeSearch): # for now this is BFS
 def nPuzzle(n, initState):
   goalNode = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
   algorithms = ["bfs", "dfs", "ids", "bds"]
-  # print(f"from nPuzzle {initState}")
   endTimes = dict()
   endTimes["problem"] = initState
   for a in algorithms:
     timeToStart = run_time()
     finalNode, path = graphSearch(initState, goalNode, a)
-    # print(f"{finalNode=}")
     timeToFinish = run_time()
     if finalNode == goalNode:
-      # print(f"good Path: {path}")
       endTimes[a] = f"{timeToFinish - timeToStart}"
       if "path" not in endTimes:
         endTimes["path"] = path
       elif endTimes["path"] > path:
         endTimes["path"] = path
     else:
-      # print(f"Path: {path}")
       endTimes[a] = 1111111.111
   return endTimes
 
 # Invoke
 def run(initState):
-  # print(initState)
-  # print(f"from Run {initState}")
   return nPuzzle(3, initState)
 
 # Main
@@ -181,26 +151,19 @@ def main():
   for i in range(1,maxComplexity,4):
     complexityLevel = i
     currentState = genRandInit(complexityLevel=complexityLevel, currentState=currentState)
-    print(currentState)
-    # print(currentState)
     timelist.append(run(currentState))
-
   return timelist
-
-# Test/Debug
-# [[4, 3, 2], [1, 0, 5], [6, 7, 8]] # Works for 10
-# Errors
-class NoPathFoundError(Exception):
-  pass
-
-class SuccessorsError(Exception):
-  pass
 
 # Modularity
 if __name__ == "__main__":
   timelist = main()
+  # For Ali
+  # Options for seeing answers
+  # To print to command line
   pprint(timelist)
-  ToODS(timelist, name="SlidePuzzle.ods")
+  # To create .ods file (similar to excel)
+  ToODS(timelist, "SlidePuzzle.ods")
+
 
 
 
