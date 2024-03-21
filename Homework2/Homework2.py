@@ -1,6 +1,7 @@
 from HillClimbing import HillClimbing as HC
 from GeneticAlgorithm import GeneticAlgorithm as GA
 from ParticleSwarmOptimization import ParticleSwarmOptimization as PSO
+from DifferentialEvolution import DifferentialEvolution as DE
 
 def ObjectiveFunction(position):
     attackingPairs = 0
@@ -14,6 +15,8 @@ def main():
     hc = HC(8)
     ga = GA(n=8, populationSize=100, generations=100, mutationRate=0.2)
     pso = PSO(objective_function=ObjectiveFunction, dimension=8, swarm_size=30, max_iter=100)
+    de = DE(n=8, populationSize=100, iterations=1000, F=0.5, CR=0.7)
+
     methods = {"Hill Climb": hc, "Genetic Algorithm" : ga, "Particle Swarm Optimizer" : pso}# , de]
     for method in methods:
         methods[method].printBoard(method)
