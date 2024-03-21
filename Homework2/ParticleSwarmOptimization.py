@@ -1,77 +1,60 @@
 import numpy as np
 
 class Particle:
-    def __init__(self, dimension, posBounds=(-10, 10), velBounds=(-1, 1)):
-        posLower, posUpper = posBounds
-        velLower, velUpper = velBounds
-        self.position = np.random.uniform(low=posLower, high=posUpper, size=dimension)
-        self.velocity = np.random.uniform(low=velLower, high=velUpper, size=dimension)
-        self.bestPosition = np.copy(self.position)
-        self.bestFitness = np.inf
-        self.fitness = np.inf
+    def __init__(self, dimension):
+        self.position = np.random.permutation(dimension)
+        self.best_position = np.copy(self.position)
+        self.fitness = self.evaluate()
+        self.best_fitness = self.fitness
 
-    def evaluateSolution(self, solution):
-        n = self.dimension
-        attacks = 0
-        for i in range(n):
-            for j in range(i + 1, n):
-                if solution[i] == solution[j] or abs(solution[i] - solution[j]) == j - 1:
-                    attacks += 1
-        return attacks
+    def evaluate(self):
+        attacking_pairs = 0
+        for i in range(len(self.position)):
+            for j in range(i + 1, len(self.position)):
+                if abs(self.position[i] - self.position[j]) == j - i:
+                    attacking_pairs += 1
+        return attacking_pairs
+
+    def update_position(self):
+        # Swap operation to simulate "velocity"
+        idx1, idx2 = np.random.choice(len(self.position), 2, replace=False)
+        self.position[idx1], self.position[idx2] = self.position[idx2], self.position[idx1]
+
 
 class ParticleSwarmOptimization:
-    def __init__(self, objectiveFunction, dimension, swarmSize, maxIter, w=0.5, c1=1.5, c2=1.5, posBounds=(-10, 10), velBounds=(-1, 1)):
-        self.objectiveFunction = objectiveFunction
+    def __init__(self, objective_function, dimension, swarm_size, max_iter):
+        self.objective_function = objective_function
         self.dimension = dimension
-        self.swarmSize = swarmSize
-        self.maxIter = maxIter
-        self.w = w
-        self.c1 = c1
-        self.c2 = c2
-        self.posBounds = posBounds
-        self.velBounds = velBounds
+        self.swarm = [Particle(dimension) for _ in range(swarm_size)]
+        self.max_iter = max_iter
+        self.g_best_position = None
+        self.g_best_fitness = np.inf
 
-        self.swarm = [Particle(dimension, posBounds, velBounds) for _ in range(swarmSize)]
-        self.gBestPosition = None
-        self.gBestFitness = np.inf
+        self.update_particles()
 
-        self.evaluateSwarm() # should initialize swarm
-
-    def evaluateSwarm(self):
+    def update_particles(self):
         for particle in self.swarm:
-            particle.fitness = self.objectiveFunction(particle.position)
-            if particle.fitness < particle.bestFitness:
-                particle.bestFitness = particle.fitness
-                particle.bestPosition = particle.position
-            if particle.fitness < self.gBestFitness:
-                self.gBestFitness = particle.fitness
-                self.gBestPosition = particle.position
-                self.gBestPosition = particle.position
+            particle.fitness = self.objective_function(particle.position)
+            if particle.fitness < particle.best_fitness:
+                particle.best_fitness = particle.fitness
+                particle.best_position = np.copy(particle.position)
+            if particle.fitness < self.g_best_fitness:
+                self.g_best_fitness = particle.fitness
+                self.g_best_position = np.copy(particle.position)
 
+    def run(self):
+        for _ in range(self.max_iter):
+            self.update_particles()
 
-    def updateParticles(self):
-        for particle in self.swarm:
-            r1, r2 = np.random.rand(self.dimension), np.random.rand(self.dimension)
-            pbc = self.c1 * r1 * (particle.bestPosition - particle.position)
-            gbc = self.c2 * r2 * (self.gBestPosition - particle.position)
-            particle.velocity = self.w * particle.velocity + pbc + gbc
-            particle.position += particle.velocity
-
-    def updateGlobal(self):
-        for particle in self.swarm:
-            if particle.fitness < self.gBestFitness:
-                self.gBestFitness = particle.fitness
-                self.gBestPosition = np.copy(particle.position)
-
-    def optimize(self):
-        for _ in range(self.maxIter):
-            self.evaluateSwarm()
-            self.updateParticles()
-
-
-    def particleSwarmOptimization(self):
-        swarm = initSwarm()
-        for particle in swarm:
-            fitness = calcFitness()
-            updateBestPosition(particle, fitness)
-        updateBestPosition(Global, Globalfitness)
+    def printBoard(self, method=""):
+        print(f"{method=}\n")
+        n = len(self.g_best_position)
+        for row in range(n):
+            line = ""
+            for col in range(n):
+                if self.g_best_position[col] == row:
+                    line += " Q "
+                else:
+                    line += " . "
+            print(line)
+        print("\n")

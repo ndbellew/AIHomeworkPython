@@ -43,7 +43,8 @@ class HillClimbing:
         self.state = bestState
         self.updateBoard()
 
-    def printBoard(self):
+    def printBoard(self, method=""):
+        print(f"{method=}\n")
         for state in self.board:
             line = ""
             for val in state:

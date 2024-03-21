@@ -53,12 +53,12 @@ class GeneticAlgorithm:
         return child
 
     def fitness(self, node):
-        conflicts = 0
+        attacks = 0
         for i in range(len(node)):
-            for j in range(i+1, len(node)):
+            for j in range(i + 1, len(node)):
                 if node[i] == node[j] or abs(node[i] - node[j]) == j - i:
-                    conflicts += 1
-        return -conflicts
+                    attacks += 1
+        return -attacks
 
     def getBestSolution(self, pop):
         bestSolve = pop[0]
@@ -70,7 +70,7 @@ class GeneticAlgorithm:
                 bestFitness = currFitness
         return bestSolve, bestFitness
 
-    def printBoard(self):
+    def printBoard(self, method=""):
         def printing(p):
             for row in range(self.n):
                 line = ""
@@ -84,6 +84,7 @@ class GeneticAlgorithm:
         solution = None
         if self.bestSolution:
             printing(self.bestSolution)
+            print(f"{method=}\n")
         else:
             board = 1
             for individual in self.population:
