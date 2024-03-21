@@ -17,12 +17,12 @@ def main():
     pso = PSO(objective_function=ObjectiveFunction, dimension=8, swarm_size=30, max_iter=100)
     de = DE(n=8, populationSize=100, iterations=1000, F=0.5, CR=0.7)
 
-    methods = {"Hill Climb": hc, "Genetic Algorithm" : ga, "Particle Swarm Optimizer" : pso}# , de]
+    methods = {"Hill Climb": hc, "Genetic Algorithm" : ga, "Particle Swarm Optimizer" : pso, "Differential Evolution" : de}
     for method in methods:
-        methods[method].printBoard(method)
+        print(method)
         print("\n")
         methods[method].run()
-        methods[method].printBoard(method)
+        methods[method].printBoard()
         print("\n")
 
 

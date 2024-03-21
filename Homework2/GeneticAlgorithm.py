@@ -86,11 +86,12 @@ class GeneticAlgorithm:
             printing(self.bestSolution)
             print(f"{method=}\n")
         else:
-            board = 1
-            for individual in self.population:
-                print(f"Individual: {board}")
-                printing(individual)
-                board += 1
+            pass
+            # board = 1
+            # for individual in self.population:
+            #     print(f"Individual: {board}")
+            #     printing(individual)
+            #     board += 1
 
 
     def geneticAlgorithm(self):
