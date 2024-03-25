@@ -1,4 +1,5 @@
 from random import randint
+import time
 
 class HillClimbing:
     def __init__(self, numberOfQueens):
@@ -66,8 +67,22 @@ class HillClimbing:
     def __repr__(self):
         self.printBoard()
 
-    def run(self):
-        return self.hillClimbing()
+    def run(self, max_restarts=100):
+        start_time = time.time()
+        num_restarts = 0
+        while num_restarts < max_restarts:
+            self.state = [randint(0, self.n-1) for _ in range(self.n)]
+            self.updateBoard()
+            result = self.hillClimbing()
+            if not self.numOfAttacks():  # Check if all queens are in safe positions
+                print(f"Restart #{num_restarts + 1} - Solution found")
+                print(f"Restart #{num_restarts + 1} - Solution state: {result}")
+                print(f"Restart #{num_restarts + 1} - Time taken: {time.time() - start_time:.4f} seconds")
+                return result
+            num_restarts += 1
+        self.printBoard(f"Restart #{num_restarts + 1} - No solution found")
+        print(f"Restart #{num_restarts + 1} - Time taken: {time.time() - start_time:.4f} seconds")
+        return None
 
     def isEmpty(self):
         for i in range(self.n):

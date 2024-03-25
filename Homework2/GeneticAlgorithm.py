@@ -84,7 +84,8 @@ class GeneticAlgorithm:
         solution = None
         if self.bestSolution:
             printing(self.bestSolution)
-            print(f"{method=}\n")
+            if method:
+                print(f"{method=}\n")
         else:
             pass
             # board = 1
@@ -104,11 +105,18 @@ class GeneticAlgorithm:
                 children = self.crossover(parent1, parent2)
                 for child in children:
                      newPopulation.append(self.mutate(child, self.mutationRate))
-            population = newPopulation
+            self.population = newPopulation
         self.bestSolution, self.bestFitness = self.getBestSolution(self.population)
         return self.bestSolution
 
 
     def run(self):
         geneticAlgorithm = self.geneticAlgorithm()
+        print(f"Best Solution: {geneticAlgorithm=}")
         return geneticAlgorithm
+
+if __name__ == "__main__":
+    print("TEST")
+    ga = GeneticAlgorithm(n=8, populationSize=100, generations=100, mutationRate=0.2)
+    x = ga.run()
+    ga.printBoard()
