@@ -69,12 +69,14 @@ class DifferentialEvolution:
             print("No solution found.")
         else:
             for row in range(self.n):
+                line = ""
                 for col in range(self.n):
                     if solution[col] == row:
-                        print(' Q ')
+                        line += ' Q '
                     else:
-                        print(' . ')
-                print()
+                        line += ' . '
+                print(line)
+        print()
 
     def run(self):
         self.differentialEvolution()
