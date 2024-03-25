@@ -65,7 +65,7 @@ class DifferentialEvolution:
 
     def printBoard(self, Method=""):
         solution = self.bestSolution()
-        if not solution:
+        if len(solution) == 0 or solution is None:
             print("No solution found.")
         else:
             for row in range(self.n):
