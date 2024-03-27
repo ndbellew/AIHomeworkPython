@@ -19,20 +19,21 @@ def main():
 
     methods = {"Hill Climb": hc, "Genetic Algorithm" : ga, "Particle Swarm Optimizer" : pso, "Differential Evolution" : de}
     runMethods(methods)
-    input("Finisehd with 8-Queens\n if you are ready to continue press [Enter]\n -->  ")
+    # input("Finished with 8-Queens\n if you are ready to continue press [Enter]\n -->  ")
     hc = HC(32)
     ga = GA(n=32, populationSize=100, generations=100, mutationRate=0.2)
-    pso = PSO( dimension=32, swarmSize=64, maxIter=128)
+    # pso = PSO( dimension=32, swarmSize=64, maxIter=128, w0=0.9, w1=0.4, c1=2.0, c2=2.0)
+    pso = PSO(dimension=32, swarmSize=64, maxIter=128, w0=0.9, w1=0.4, c1=2.3, c2=1.6)
     de = DE(n=32, populationSize=100, iterations=1000, F=0.5, CR=0.7)
     methods = {"Hill Climb": hc, "Genetic Algorithm": ga, "Particle Swarm Optimizer": pso, "Differential Evolution": de}
     runMethods(methods)
 
-    # hc = HC(4096)
-    # ga = GA(n=4096, populationSize=100, generations=100, mutationRate=0.2)
-    # pso = PSO( dimension=4096, swarmSize=30, maxIter=100)
-    # de = DE(n=4096, populationSize=100, iterations=1000, F=0.5, CR=0.7)
-    # methods = {"Hill Climb": hc, "Genetic Algorithm": ga, "Particle Swarm Optimizer": pso, "Differential Evolution": de}
-    # runMethods(methods)
+    #hc = HC(128)
+    ga = GA(n=128, populationSize=100, generations=100, mutationRate=0.2)
+    pso = PSO( dimension=128, swarmSize=30, maxIter=100)
+    de = DE(n=128, populationSize=100, iterations=1000, F=0.5, CR=0.7)
+    methods = {"Hill Climb": hc, "Genetic Algorithm": ga, "Particle Swarm Optimizer": pso, "Differential Evolution": de}
+    runMethods(methods)
 
 if __name__ == '__main__':
     main()

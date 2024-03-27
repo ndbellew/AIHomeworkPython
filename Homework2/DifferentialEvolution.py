@@ -10,6 +10,14 @@ class DifferentialEvolution:
         self.F = F
         self.CR = CR
         self.population = self.initPopulation()
+        self.solution = None
+
+    def get(self):
+        solution = self.bestSolution()
+        if len(solution) == 0 or solution is None:
+            return None
+        else:
+            return solution
 
     def initPopulation(self):
         population = []
@@ -64,14 +72,13 @@ class DifferentialEvolution:
 
 
     def printBoard(self, Method=""):
-        solution = self.bestSolution()
-        if len(solution) == 0 or solution is None:
+        if len(self.solution) == 0 or self.solution is None:
             print("No solution found.")
         else:
             for row in range(self.n):
                 line = ""
                 for col in range(self.n):
-                    if solution[col] == row:
+                    if self.solution[col] == row:
                         line += ' Q '
                     else:
                         line += ' . '
@@ -80,6 +87,7 @@ class DifferentialEvolution:
 
     def run(self):
         self.differentialEvolution()
+        self.solution = self.bestSolution()
 
     def differentialEvolution(self):
         for generation in range(self.iterations):

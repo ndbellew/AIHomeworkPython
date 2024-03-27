@@ -44,8 +44,16 @@ class HillClimbing:
         self.state = bestState
         self.updateBoard()
 
+    def get(self):
+        solution = self.board
+        if len(solution) == 0 or solution is None:
+            return None
+        else:
+            return solution
+
     def printBoard(self, method=""):
-        print(f"{method=}\n")
+        if method:
+            print(f"{method=}\n")
         for state in self.board:
             line = ""
             for val in state:
@@ -64,8 +72,12 @@ class HillClimbing:
                 break
             currentAttacks = self.numOfAttacks()
         return self.state
-    def __repr__(self):
-        self.printBoard()
+
+    def get(self):
+        if not self.numOfAttacks():
+            return None
+        else:
+            return self.state
 
     def run(self, max_restarts=100):
         start_time = time.time()

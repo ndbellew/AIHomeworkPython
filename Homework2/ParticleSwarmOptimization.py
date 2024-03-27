@@ -1,4 +1,5 @@
 import numpy as np
+from random import uniform
 
 class Particle:
     def __init__(self, dimension):
@@ -6,21 +7,22 @@ class Particle:
         self.best_position = np.copy(self.position)
         self.fitness = self.evaluate()
         self.best_fitness = self.fitness
+        self.ultimatePosition = None
 
     def evaluate(self):
         attacking_pairs = 0
         for i in range(len(self.position)):
             for j in range(i + 1, len(self.position)):
-                if abs(self.position[i] - self.position[j]) == j - i:
+                if abs(self.position[i] - self.position[j]) == j - i or self.position[i] == self.position[j]:
                     attacking_pairs += 1
         return attacking_pairs
 
     def update_position(self, best_global_position, c1=1.5, c2=1.5):
-        # Probabilistic approach to select indices based on personal and global bests
-        if np.random.rand() < c1:  # Influence of the particle's own best position
+        randomSwap = uniform(0.001, 1.999) ## assuming i stay between 0-2 for c1 and c2.
+        if randomSwap < c1:  # Influence of the particle's own best position
             idx1 = np.random.choice(len(self.position))
             idx2 = np.where(self.position == self.best_position[idx1])[0][0]
-        elif np.random.rand() < c2:  # Influence of the global best position
+        elif randomSwap < c2:  # Influence of the global best position
             idx1 = np.random.choice(len(self.position))
             idx2 = np.where(self.position == best_global_position[idx1])[0][0]
         else:  # Random swap
@@ -47,17 +49,9 @@ class ParticleSwarmOptimization:
         # Dynamically adjusted
         self.wPrime = self.wFinal + (self.wPrime - self.wFinal) * (1 - iteration / self.maxIter)
 
-    def objectiveFunction(self, position):
-        attackingPairs = 0
-        for i in range(len(position)):
-            for j in range(i + 1, len(position)):
-                if abs(position[i] - position[j]) == j - i:
-                    attackingPairs += 1
-        return attackingPairs
-
     def update_particles(self):
         for particle in self.swarm:
-            particle.fitness = self.objectiveFunction(particle.position)
+            particle.fitness = particle.evaluate()
             if particle.fitness < particle.best_fitness:
                 particle.best_fitness = particle.fitness
                 particle.best_position = np.copy(particle.position)
@@ -81,6 +75,12 @@ class ParticleSwarmOptimization:
     def run(self):
         self.particleSwarmOptimization()
 
+    def get(self):
+        if not self.ultimatePosition:
+            return None
+        else:
+            return self.ultimatePosition
+
     def printBoard(self):
         n = len(self.ultimatePosition)
         for row in range(n):
@@ -93,8 +93,16 @@ class ParticleSwarmOptimization:
             print(line)
         print("\n")
 
-pso = ParticleSwarmOptimization(dimension=8, swarmSize=64, maxIter=128)
-pso.run()
-print(pso.ultimateFitness)
-print(pso.ultimatePosition)
-pso.printBoard()
+if __name__ == "__main__":
+    testnum = 0
+    for i in range(20):
+        pso = ParticleSwarmOptimization(dimension=32, swarmSize=64, maxIter=128, w0=1.9, w1=0.4, c1=2.3, c2=1.7)
+        pso.run()
+        test = set(list(pso.ultimatePosition))
+        testnum = pso.dimension - len(test)
+        if testnum > 0:
+            print(testnum)
+            print(pso.ultimateFitness)
+            print(pso.ultimatePosition)
+            pso.printBoard()
+    # No need to check vertical attacks since each queen is in a unique column
