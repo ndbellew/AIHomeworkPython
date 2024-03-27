@@ -62,9 +62,8 @@ class ParticleSwarmOptimization:
     def particleSwarmOptimization(self):
         for _ in range(self.maxIter):
             for particle in self.swarm:
-                # Consider including influence from best positions here
-                particle.update_position(self.ultimatePosition)  # Passing global best for influence
-                particle.fitness = self.objectiveFunction(particle.position)
+                particle.update_position(self.ultimatePosition)
+                particle.fitness = particle.evaluate()
                 if particle.fitness < particle.best_fitness:
                     particle.best_fitness = particle.fitness
                     particle.best_position = np.copy(particle.position)
@@ -76,7 +75,7 @@ class ParticleSwarmOptimization:
         self.particleSwarmOptimization()
 
     def get(self):
-        if not self.ultimatePosition:
+        if len(self.ultimatePosition) == 0 or self.ultimatePosition is None:
             return None
         else:
             return self.ultimatePosition

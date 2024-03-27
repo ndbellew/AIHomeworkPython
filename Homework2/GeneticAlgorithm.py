@@ -53,10 +53,7 @@ class GeneticAlgorithm:
         return child
 
     def get(self):
-        if self.bestSolution:
-            return None
-        else:
-            return self.bestSolution
+        return self.bestSolution
 
     def fitness(self, node):
         attacks = 0

@@ -6,6 +6,7 @@ class HillClimbing:
         self.n = numberOfQueens
         self.board = [[0 for _ in range(self.n)] for _ in range(self.n)]
         self.state = [randint(0, self.n-1) for _ in range(self.n)]
+        self.bestState = None
         self.updateBoard()
 
     def updateBoard(self):
@@ -45,8 +46,8 @@ class HillClimbing:
         self.updateBoard()
 
     def get(self):
-        solution = self.board
-        if len(solution) == 0 or solution is None:
+        solution = self.state
+        if self.numOfAttacks() > 0:
             return None
         else:
             return solution
@@ -74,10 +75,7 @@ class HillClimbing:
         return self.state
 
     def get(self):
-        if not self.numOfAttacks():
-            return None
-        else:
-            return self.state
+        return self.bestState
 
     def run(self, max_restarts=100):
         start_time = time.time()
@@ -85,12 +83,12 @@ class HillClimbing:
         while num_restarts < max_restarts:
             self.state = [randint(0, self.n-1) for _ in range(self.n)]
             self.updateBoard()
-            result = self.hillClimbing()
+            self.bestState = self.hillClimbing()
             if not self.numOfAttacks():  # Check if all queens are in safe positions
                 print(f"Restart #{num_restarts + 1} - Solution found")
-                print(f"Restart #{num_restarts + 1} - Solution state: {result}")
+                print(f"Restart #{num_restarts + 1} - Solution state: {self.bestState}")
                 print(f"Restart #{num_restarts + 1} - Time taken: {time.time() - start_time:.4f} seconds")
-                return result
+                return self.bestState
             num_restarts += 1
         self.printBoard(f"Restart #{num_restarts + 1} - No solution found")
         print(f"Restart #{num_restarts + 1} - Time taken: {time.time() - start_time:.4f} seconds")
