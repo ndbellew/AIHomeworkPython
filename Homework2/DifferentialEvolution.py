@@ -50,7 +50,6 @@ class DifferentialEvolution:
                 trial[i] = target[i]
         return trial
 
-
     def evaluate(self, individual):
         conflicts = 0
         for i in range(self.n):
@@ -60,7 +59,6 @@ class DifferentialEvolution:
                     conflicts += 1
         return conflicts
 
-
     def solutionFound(self):
         # Check if any individual in the population is a solution (0 conflicts)
         return any(self.evaluate(individual) == 0 for individual in self.population)
@@ -69,7 +67,6 @@ class DifferentialEvolution:
     def bestSolution(self):
         # Return the individual with the lowest number of conflicts
         return min(self.population, key=self.evaluate)
-
 
     def printBoard(self, Method=""):
         if len(self.solution) == 0 or self.solution is None:
